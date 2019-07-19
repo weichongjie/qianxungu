@@ -1,12 +1,12 @@
 <template>
-    <div class="home">
-        home组件
+    <div class="login">
+        login组件
     </div>
 </template>
 
 <script>
     export default {
-        name: "Home"
+        name: "login"
     }
 </script>
 
