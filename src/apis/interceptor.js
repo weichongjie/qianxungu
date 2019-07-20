@@ -69,7 +69,7 @@ axios.interceptors.response.use(response => {
             console.log('发生未知错误,链接失败');
         }
         // 返回错误信息的promise回调
-        return Promise.reject(error.response);
+        return Promise.resolve(error.response);
     }
 );
 
