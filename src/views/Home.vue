@@ -2,19 +2,29 @@
     <div class="home">
         <el-container class="home-el-container">
             <el-aside :width="isCollapse ? '101px' : '201px'">
-                <el-menu default-active="1-1"
+                <el-menu default-active="admin"
                          class="el-menu-vertical-demo"
                          :collapse="isCollapse"
                          background-color="#545c64"
                          text-color="#fff"
                          active-text-color="#ffd04b"
                          @open="handleOpen">
-                    <el-submenu index="1">
-                        <template slot="title">
-                            <i class="el-icon-location"></i>
-                            <span slot="title">导航一</span>
+                    <el-submenu
+                            v-for="item in menuList"
+                            :index="item.name" :key="item.name">
+                        <template slot="title" >
+                            <i class="el-icon-menu"></i>
+                            <span slot="title">{{item.title}}</span>
                         </template>
-                        <el-menu-item index="1-1">选项1</el-menu-item>
+                        <template v-if="item.children">
+                            <el-menu-item
+                                    :index="elem.name"
+                                    v-for="elem in item.children"
+                                    :key="elem.name">
+                                {{elem.title}}
+                            </el-menu-item>
+                        </template>
+
                     </el-submenu>
 
                     <el-menu-item class="home-aside-bottom">
@@ -30,47 +40,13 @@
                 </el-header>
 
                 <el-main>
-                    <el-table
-                            :data="tableData"
-                            height="600"
-                            stripe
-                            row-key="id"
-                            :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-<!--                        多选框列-->
-                        <el-table-column type="selection" width="55" fixed>
-                        </el-table-column>
-<!--                        内容列-->
-                        <el-table-column prop="date" label="日期" width="150">
-                        </el-table-column>
-                        <el-table-column prop="name" label="姓名" width="150">
-                        </el-table-column>
-                        <el-table-column prop="address" label="地址"  show-overflow-tooltip>
-                        </el-table-column>
-<!--                        操作列-->
-                        <el-table-column
-                                fixed="right"
-
-                                width="150">
-<!--                            自定义表头-->
-                            <template slot="header" slot-scope="scope">
-                                操作
-                            </template>
-                            <template slot-scope="scope">
-                                <el-button
-                                        @click="handleEdit(scope.$index, scope.row)"
-                                        type="primary"
-                                        size="mini">
-                                    编辑
-                                </el-button>
-                                <el-button
-                                        @click="handleDelete(scope.$index, scope.row)"
-                                        type="danger"
-                                        size="mini">
-                                    删除
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
+                    <el-breadcrumb separator-class="el-icon-arrow-right">
+                        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                        <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+                        <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+                        <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+                    </el-breadcrumb>
+                    <router-view></router-view>
                 </el-main>
             </el-container>
         </el-container>
@@ -83,72 +59,48 @@
         data() {
             return {
                 isCollapse: false,
-                tableData: [
+                menuList: [
                     {
-                        id: 1,
-                        date: '2016-05-03',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1518 弄',
-                        children: [{
-                            id: 31,
-                            date: '2016-05-01',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1519 弄'
-                        }, {
-                            id: 32,
-                            date: '2016-05-01',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1519 弄'
-                        }]
-                    }, {
-                        id: 2,
-                        date: '2016-05-02',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1518 弄',
-                        children: [{
-                            id: 34,
-                            date: '2016-05-01',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1519 弄'
-                        }]
-                    }, {
-                        id: 3,
-                        date: '2016-05-04',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1518 弄'
-                    }, {
-                        id: 4,
-                        date: '2016-05-01',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1518 弄'
-                    }, {
-                        id: 5,
-                        date: '2016-05-08',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1518 弄'
-                    }, {
-                        id: 6,
-                        date: '2016-05-06',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1518 弄'
-                    }, {
-                        id: 7,
-                        date: '2016-05-07',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1518 弄'
+                        title: '系统管理',
+                        name: 'system',
+                        path: 'system',
+                        children: [
+                            {title: '系统管理员', name: 'admin', path: 'admin'},
+                            {title: '权限管理', name: 'permission', path: 'permission'},
+                            {title: '角色管理', name: 'role', path: 'role'}
+                        ]
+                    },
+                    {
+                        title: '日历管理',
+                        name: 'daily',
+                        path: 'daily'
+                    },
+                    {
+                        title: '留言管理',
+                        name: 'message',
+                        path: 'message'
+                    },
+                    {
+                        title: '音频管理',
+                        name: 'music',
+                        path: 'music'
+                    },
+                    {
+                        title: '类型管理',
+                        name: 'musicType',
+                        path: 'musicType'
+                    },
+                    {
+                        title: '微信登陆管理',
+                        name: 'weChat',
+                        path: 'weChat'
                     }
-                ]
+                ],
             }
         },
         methods: {
             handleOpen(key, keyPath) {
                 console.log(key, keyPath);
-            },
-            handleEdit(index, row) {
-                console.log(index, row);
-            },
-            handleDelete(index, row) {
-                console.log(index, row);
             }
         },
         created() {
