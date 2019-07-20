@@ -12,6 +12,7 @@ axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
 // axios拦截器
 // 请求拦截
 axios.interceptors.request.use(config => {
+    // 请求时验证登陆信息
     let token = localStorage.getItem('token');
     config.headers.common['Authorization'] = 'Bearer ' + token;
         return config;
@@ -91,12 +92,12 @@ const post = function (url, params={}) {
     })
 };
 
-const  interceptor = {
+const interceptor = {
     get,
     post
 };
 
-// 配置到 react 组件原型上，调用时可以使用 this.$http
+// 配置到 Vue 原型上，调用时可以使用 this.$http
 Vue.prototype.$http = interceptor;
 
 // 导出
