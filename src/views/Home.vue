@@ -15,7 +15,7 @@
                 </el-header>
 
 <!--                面包屑-->
-                <breadcrumb></breadcrumb>
+<!--                <breadcrumb></breadcrumb>-->
 
 <!--                内容主体-->
                 <el-main>
@@ -27,8 +27,9 @@
 </template>
 
 <script>
-    import asideNav from  '@/components/common/asideNav'
-    import breadcrumb from '@/components/common/breadcrumb'
+    import asideNav from  '@/components/common/home/asideNav'
+    import breadcrumb from '@/components/common/home/breadcrumb'
+
     export default {
         name: "Home",
         components: {asideNav, breadcrumb},

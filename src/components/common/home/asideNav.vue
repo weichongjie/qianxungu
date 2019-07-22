@@ -5,7 +5,8 @@
                  background-color="#545c64"
                  text-color="#fff"
                  active-text-color="#ffd04b"
-                 @open="handleOpen">
+                 @open="handleOpen"
+                 @close="handleOpen">
 <!--            主菜单-->
             <el-submenu
                     v-for="item in menuList"
@@ -27,7 +28,7 @@
 
             <el-menu-item class="home-aside-bottom">
                 <i :class="['home-aside-el-icon-arrow', isCollapse ? 'el-icon-arrow-right' : 'el-icon-arrow-left']"
-                   @click="isCollapse = !isCollapse"></i>
+                   @click="handleCollapse"></i>
             </el-menu-item>
         </el-menu>
     </div>
@@ -86,9 +87,12 @@
             changeNav(item) {
                 console.log(item);
                 this.$router.push({path: item.path});
-                this.$store.commit('changeIsCollapse', this.isCollapse);
                 this.$store.commit('changeTitle', item.title);
                 this.$store.commit('changePath', item.path);
+            },
+            handleCollapse() {
+                this.isCollapse = !this.isCollapse;
+                this.$store.commit('changeIsCollapse', this.isCollapse);
             }
         }
     }
