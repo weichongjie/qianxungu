@@ -28,6 +28,11 @@
                     ></el-input>
                 </el-form-item>
 
+                 <div class="yzmcode">
+                    <input id="codeinput" />
+                    <div id="codespan" @click="code">点击获取验证码</div>
+                </div>
+
                 <div class="login-btn">
                     <el-form-item>
                         <el-button type="primary" size="mini" @click="login">登录</el-button>
@@ -37,10 +42,7 @@
                     </el-form-item>
                 </div>
 
-                <div>
-                    <input id="codeinput" />
-                    <span id="loginspan" @click="code">点击获取验证码</span>
-                </div>
+               
             </el-form>
         </div>
     </div>
@@ -118,7 +120,8 @@
             //获取验证码信息
             code() {
                 this.$http.get(this.$apis.checkDynamicCode, this.userInfo).then(resp => {
-                    var code = document.getElementById("loginspan");
+                    var code = document.getElementById("codespan");
+                   
                     code.innerHTML = resp.data.data;
                     this.yzmcode = resp.data.text;
                     console.log(this.yzmcode)
@@ -154,9 +157,33 @@
                 box-sizing: border-box;
             }
         }
+         #codeinput{
+             height: 30px;
+             width: 100px;
+             font-size: 15px;
+             margin-left: 100px;
+             margin-bottom: 20px;
+             text-align: center;
+             line-height: 30px;
+         }   
 
-        #loginspan {
-            border: 1px solid black;
+         .yzmcode{
+            display: flex;
+         
+        #codespan {
+         
+            display: flex;
+            height: 30px;
+                 width: 150px;
+            margin-left: 50px;
+             font-size: 16px;
+             align-items: center;
+             text-align: center;
+             svg{
+                  height: 100%;
+                 width: 100px;
+             }
+        }
         }
     }
 </style>

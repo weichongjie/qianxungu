@@ -20,6 +20,7 @@ export default new Vuex.Store({
           console.log(state.title);
       },
       changePath(state, path) {
+       
           state.path = path;
       },
       changeItem(state, item) {
