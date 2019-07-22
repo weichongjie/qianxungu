@@ -53,6 +53,11 @@ export default new Router({
                     path: 'musicType',
                     name: 'musicType',
                     component: () => import(/* webpackChunkName: "musicType" */ './components/home/musicType.vue')
+                },
+                {
+                    path: 'weChat',
+                    name: 'weChat',
+                    component: () => import(/* webpackChunkName: "weChat" */ './components/home/weChat.vue')
                 }
             ]
         },

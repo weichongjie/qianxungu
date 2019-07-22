@@ -6,6 +6,7 @@ import ElementUI from 'element-ui'
 import './apis'
 import './apis/interceptor'
 import 'u-reset.css'
+import '@/mixin'
 
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI);

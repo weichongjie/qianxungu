@@ -10,13 +10,16 @@ export default new Vuex.Store({
       title: '',
       path: '',
       item: {},
-      isCollapse: false
+      isCollapse: false,
+      dialogVisible: false
   },
   mutations: {
       changeTitle(state, title) {
           let titleArr = [];
           titleArr.push(title);
-          state.title = JSON.stringify(titleArr);
+          let obj = {};
+          obj["title"] = titleArr;
+          state.title = JSON.stringify(obj);
           console.log(state.title);
       },
       changePath(state, path) {
@@ -27,6 +30,9 @@ export default new Vuex.Store({
       },
       changeIsCollapse(state, isCollapse) {
           state.isCollapse = isCollapse;
+      },
+      changeDialogVisible(state, dialogVisible) {
+          state.dialogVisible = dialogVisible;
       }
   },
   actions: {

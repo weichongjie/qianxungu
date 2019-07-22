@@ -14,8 +14,9 @@
         name: "breadcrumb",
         computed: {
             title() {
-                // let title = JSON.parse(this.$store.state.title);
-                return this.$store.state.title;
+                let obj = JSON.parse(this.$store.state.title);
+                let title = obj['title'];
+                return title;
             },
             path() {
                 console.log(this.$store.state.path);
