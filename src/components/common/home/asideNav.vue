@@ -80,12 +80,10 @@
             }
         },
         methods: {
-            handleOpen(key, keyPath) {
-                console.log(key, keyPath);
+            handleOpen(key) {
                 this.$router.push({path: key});
             },
             changeNav(item) {
-                console.log(item);
                 this.$router.push({path: item.path});
                 this.$store.commit('changeTitle', item.title);
                 this.$store.commit('changePath', item.path);

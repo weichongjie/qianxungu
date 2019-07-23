@@ -1,17 +1,21 @@
 <template>
     <div class="addForm">
-        <el-dialog :title="title" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-            <el-form ref="form" :model="form" label-width="90px">
+        <el-dialog
+                :title="title"
+                :visible.sync="dialogVisible"
+                width="30%"
+                :before-close="handleCancel">
+            <el-form ref="permissionForm" :model="form" label-width="100px">
 
-                <el-form-item label="权限名称">
+                <el-form-item label="权限名称" required prop="permissionName">
                     <el-input v-model="form.permissionName"></el-input>
                 </el-form-item>
 
-                <el-form-item label="权限描述">
+                <el-form-item label="权限描述" required prop="permissionDesc">
                     <el-input v-model="form.permissionDesc"></el-input>
                 </el-form-item>
 
-                <el-form-item label="权限等级">
+                <el-form-item label="权限等级" required prop="permissionLeve">
                     <el-select
                             v-model="form.permissionLeve"
                             @change="changePermissionLevel"
@@ -27,7 +31,7 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="父级权限ID">
+                <el-form-item label="父级权限ID" required prop="parentid">
                     <el-select
                             v-model="form.parentid"
                             @change="changeParentId"
@@ -44,7 +48,7 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="权限序号">
+                <el-form-item label="权限序号" prop="sortNum">
                     <el-input v-model="form.sortNum"></el-input>
                 </el-form-item>
             </el-form>
@@ -61,7 +65,8 @@
         name: "addForm",
         props: {
             title: String,
-            allPermissions: Array
+            allPermissions: Array,
+            getData: Function
         },
         data() {
             return {
@@ -101,18 +106,24 @@
                 }
             },
             handleSubmit() {
-                this.$http.post(this.$apis.addNewPermission, this.form).then(res => {
-                    console.log(res);
-                    if (res) {
-
+                this.$refs['permissionForm'].validate(valid => {
+                    if (valid) {
+                        this.$http.post(this.$apis.addNewPermission, this.form).then(res => {
+                            if (res.success) {
+                                this.handleCancel();
+                                this.getData();
+                            }
+                        });
+                        // let action = () => this.$http.post(this.$apis.addNewPermission, this.form);
+                        // this.messageBox(action, '新增权限').then(() => {
+                        //     this.handleCancel();
+                        //     this.getData();
+                        // });
                     }
                 });
-                this.$store.commit('changeDialogVisible', false);
             },
             handleCancel () {
-                this.$store.commit('changeDialogVisible', false);
-            },
-            handleClose() {
+                this.$refs['permissionForm'].resetFields();
                 this.$store.commit('changeDialogVisible', false);
             }
         }

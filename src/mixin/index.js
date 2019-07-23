@@ -9,15 +9,24 @@ Vue.mixin({
                 type: 'warning'
             }).then(() => {
                 action().then(res=>{
+<<<<<<< HEAD
                     this.$message({
                         type: 'success',
                         message: '删除成功!'
                     });
+=======
+                    if (res.success) {
+                        this.$message({
+                            type: 'success',
+                            message: `${message}成功！`
+                        });
+                    }
+>>>>>>> 52d095ddc29c9a949b3517c357b7099d083c2c61
                 });
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消删除'
+                    message: `已取消${message}`
                 });
             });
         },
