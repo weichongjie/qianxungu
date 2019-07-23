@@ -55,6 +55,7 @@
 
 <style scoped lang='scss'>
     .home {
+        overflow-y: hidden;
         .home-el-container {
             height: 100vh;
             border: 1px solid #eee;

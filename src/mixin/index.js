@@ -8,7 +8,7 @@ Vue.mixin({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                action.then(res=>{
+                action().then(res=>{
                     this.$message({
                         type: 'success',
                         message: '删除成功!'

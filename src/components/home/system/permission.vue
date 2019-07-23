@@ -66,7 +66,7 @@
             },
             handleDelete(index, item) {
                 console.log(index, item);
-                let action = this.$http.post(this.$apis.deletePermission, {_id: item._id});
+                let action=() => this.$http.post(this.$apis.deletePermission, {_id: item._id});
                 this.messageBox(action, '删除权限').then(res => {
                     console.log(res);
                 })
