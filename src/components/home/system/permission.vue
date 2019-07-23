@@ -1,12 +1,12 @@
 <template>
     <div class="permission">
-        <el-button type="primary" size="small" @click="addPermission">新增权限</el-button>
-        <add-form title="新增权限" :allPermissions="tableData"></add-form>
+        <el-button type="primary" size="small" @click="handleAdd">新增权限</el-button>
+        <add-form title="新增权限" :allPermissions="tableData" :getData="getData"></add-form>
         <el-table
                 :data="tableData"
                 height="600"
                 stripe
-                row-key="id"
+                row-key="_id"
                 :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
             <!--                        多选框列-->
             <el-table-column
@@ -36,7 +36,7 @@
                 <template slot="header" slot-scope="scope">操作</template>
                 <template slot-scope="scope">
                     <el-button
-                            @click="handleDelete(scope.$index, scope.row)"
+                            @click="deletePermission(scope.$index, scope.row)"
                             type="danger"
                             size="mini">
                         删除
@@ -60,22 +60,19 @@
             }
         },
         methods: {
-            addPermission() {
+            handleAdd() {
                 this.dialogVisible = true;
                 this.$store.commit('changeDialogVisible', this.dialogVisible);
             },
-            handleDelete(index, item) {
-                console.log(index, item);
-                let action = this.$http.post(this.$apis.deletePermission, {_id: item._id});
-                this.messageBox(action, '删除权限').then(res => {
-                    console.log(res);
+            deletePermission(index, item) {
+                let action = () => this.$http.post(this.$apis.deletePermission, {_id: item._id});
+                this.messageBox(action, '删除权限').then(() => {
+                    this.getData();
                 })
             },
             getData() {
                 this.$http.post(this.$apis.findPermission).then(res => {
-                    console.log(res);
                     this.tableData = this.handlePermissions(res.data);
-                    console.log(this.tableData);
                 })
             }
         },

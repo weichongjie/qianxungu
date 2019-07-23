@@ -20,7 +20,7 @@ export default new Vuex.Store({
           let obj = {};
           obj["title"] = titleArr;
           state.title = JSON.stringify(obj);
-          console.log(state.title);
+          // console.log(state.title);
       },
       changePath(state, path) {
           state.path = path;
