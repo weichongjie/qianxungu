@@ -46,7 +46,6 @@
         <template slot-scope="scope">
            <el-button  @click="updaterole(scope.$index, scope.row) " type="primary" size="mini">更新</el-button>
           <el-button @click="deleterole(scope.$index, scope.row)" type="danger" size="mini">删除</el-button>
-
        
         </template> 
       </el-table-column>

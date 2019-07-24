@@ -121,7 +121,7 @@
             code() {
                 this.$http.get(this.$apis.checkDynamicCode, this.userInfo).then(resp => {
                     var code = document.getElementById("codespan");
-                   
+                    console.log(resp)
                     code.innerHTML = resp.data.data;
                     this.yzmcode = resp.data.text;
                     console.log(this.yzmcode)
