@@ -19,6 +19,7 @@
                 <el-form-item label="角色权限" prop="permissions">
                     <el-input v-model="form.permissions"></el-input>
                 </el-form-item>
+<<<<<<< HEAD
             </el-form>
             <el-button @click="newaddrole" type="primary" size="mini">确定</el-button>
             <el-button @click="handleClose" type="danger" size="mini">取消</el-button>
@@ -54,6 +55,42 @@
 
 
     </div>
+=======
+    </el-form>
+        <el-button @click="newaddrole" type="primary" size="mini">确定</el-button>
+          <el-button @click="handleClose" type="danger" size="mini">取消</el-button>
+
+    </el-dialog>
+   
+    <el-table
+      :data="tableData"
+      height="600"
+      stripe
+      row-key="id"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+    >
+      <!--多选框列-->
+      <el-table-column type="selection" width="55" fixed></el-table-column>
+      <!--内容列-->
+
+      <el-table-column prop="roleName" label="角色名" width="150"></el-table-column>
+      <el-table-column prop="roleDesc" label="角色描述" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="permissions" label="角色权限" show-overflow-tooltip></el-table-column>
+      <!--操作列-->
+      <el-table-column fixed="right" width="150">
+        <!--自定义表头-->
+        <template slot="header" slot-scope="scope">操作</template>
+        <template slot-scope="scope">
+           <el-button  @click="updaterole(scope.$index, scope.row) " type="primary" size="mini">更新</el-button>
+          <el-button @click="deleterole(scope.$index, scope.row)" type="danger" size="mini">删除</el-button>
+       
+        </template> 
+      </el-table-column>
+    </el-table>
+     
+      
+  </div>
+>>>>>>> dev
 </template>
 
 <script>
