@@ -7,7 +7,7 @@
                 :visible.sync="isUpload"
                 width="50%"
                 :before-close="cancelAdd">
-            <el-form ref="musicUploadForm" label-width="100px">
+            <el-form ref="musicUploadForm" :model="uploadForm" label-width="100px">
 
                 <el-form-item label="音乐文件" required>
                 <!--action	必选参数，上传的地址-->
@@ -45,7 +45,7 @@
                 </el-form-item>
 
                 <el-form-item label="音乐描述" required prop="description">
-                    <el-input v-model="description"></el-input>
+                    <el-input v-model="uploadForm.description"></el-input>
                 </el-form-item>
 
                 <el-form-item label="校验文件进度">
@@ -92,22 +92,28 @@
             <el-table-column type="expand">
                 <template slot-scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
-                        <el-form-item label="音乐 ID">
+                        <el-form-item label="音频 ID">
                             <span>{{ props.row._id }}</span>
                         </el-form-item>
-                        <el-form-item label="音乐名称">
+                        <el-form-item label="音频名称">
                             <span>{{ props.row.name }}</span>
                         </el-form-item>
-                        <el-form-item label="音乐类型">
+                        <el-form-item label="音频类型">
                             <span>{{ props.row.type }}</span>
                         </el-form-item>
-                        <el-form-item label="音乐地址">
+                        <el-form-item label="音频地址">
                             <span>{{ props.row.address }}</span>
                         </el-form-item>
-                        <el-form-item label="音乐背景">
+                        <el-form-item label="音频源文件">
+                            <span>{{ props.row.xm4aPath }}</span>
+                        </el-form-item>
+                        <el-form-item label="音频背景">
                             <span>{{ props.row.icon }}</span>
                         </el-form-item>
-                        <el-form-item label="音乐大小">
+                        <el-form-item label="喜爱人数">
+                            <span>{{ props.row.liked }}</span>
+                        </el-form-item>
+                        <el-form-item label="音频发布日期">
                             <span>{{ props.row.pubDate }}</span>
                         </el-form-item>
                     </el-form>
@@ -116,21 +122,28 @@
             <!--                        内容列-->
             <el-table-column
                     prop="name"
-                    label="音乐名称"
+                    label="音频名称"
                     width="150"
                     show-overflow-tooltip>
 
             </el-table-column>
             <el-table-column
                     prop="type"
-                    label="音乐类型"
+                    label="音频类型"
                     width="150"
                     show-overflow-tooltip>
 
             </el-table-column>
             <el-table-column
-                    prop="icon"
-                    label="音乐背景"
+                    prop="pubDate"
+                    label="音频发布日期"
+                    width="150"
+                    show-overflow-tooltip>
+
+            </el-table-column>
+            <el-table-column
+                    prop="description"
+                    label="音频描述"
                     show-overflow-tooltip>
 
             </el-table-column>
@@ -165,22 +178,22 @@
                 :visible.sync="isUpdate"
                 width="30%"
                 :before-close="cancelUpdate">
-            <el-form ref="musicUpdateForm" :model="form" label-width="100px">
+            <el-form ref="musicUpdateForm" :model="updateForm" label-width="100px">
 
                 <el-form-item label="音乐名称" required prop="name">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="updateForm.name"></el-input>
                 </el-form-item>
                 <el-form-item label="音乐描述" required prop="description">
-                    <el-input v-model="form.description"></el-input>
+                    <el-input v-model="updateForm.description"></el-input>
                 </el-form-item>
                 <el-form-item label="音乐类型" required prop="type">
-                    <el-input v-model="form.type"></el-input>
+                    <el-input v-model="updateForm.type"></el-input>
                 </el-form-item>
                 <el-form-item label="音乐背景" required prop="icon">
-                    <el-input v-model="form.icon"></el-input>
+                    <el-input v-model="updateForm.icon"></el-input>
                 </el-form-item>
                 <el-form-item label="音乐 ID" required prop="_id">
-                    <el-input v-model="form._id" disabled="true"></el-input>
+                    <el-input v-model="updateForm._id" :disabled="true"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -199,8 +212,10 @@
                 isUpload: false,
                 isUpdate: false,
                 tableData: [],
-                description: '',
-                form: {
+                uploadForm: {
+                    description: ''
+                },
+                updateForm: {
                     name: '',
                     description: '',
                     _id: '',
@@ -217,7 +232,8 @@
                     {color: '#6f7ad3', percentage: 100}
                 ],
                 audioFile: {},
-                imgFile: {}
+                imgFile: {},
+                musicList: []
             }
         },
         methods: {
@@ -263,9 +279,13 @@
             },
             // 点击上传
             submitUpload() {
+<<<<<<< HEAD
                
                 this.$refs['musicTypeForm'].validate(valid => {
                      console.log(valid)
+=======
+                this.$refs['musicUploadForm'].validate(valid => {
+>>>>>>> e9176ec8a205d30289c31b345a4afa0c6cdee7cb
                     if (valid) {
                         this.$refs.musicUpload.submit();
                         this.$refs.imgUpload.submit();
@@ -305,9 +325,16 @@
             },
             // 提交更新
             submitUpdate() {
-                this.$http.post(this.$apis.updateMusicInfo, this.form).then(res => {
-                    console.log(res);
-                });
+                this.$refs['musicUpdateForm'].validate(valid => {
+                    if (valid) {
+                        this.$http.post(this.$apis.updateMusicInfo, this.updateForm).then(res => {
+                            if (res.success) {
+                                this.cancelUpdate();
+                                this.getData();
+                            }
+                        });
+                    }
+                })
             },
             // 取消更新
             cancelUpdate () {
@@ -317,8 +344,12 @@
             // 点击删除
             handleDelete(index, item) {
                 console.log(item);
-                let action = () => this.$http.post(this.$apis.deleteMusic, {_id: item._id});
-                this.messageBox(action, '删除音乐类型').then(() => {
+                let obj = {_id: item._id};
+                this.musicList.push(obj);
+                let action = () => this.$http.post(this.$apis.deleteMusic, {musicList: this.musicList});
+                this.messageBox(action, '删除音频').then(res => {
+                    console.log(res);
+                    this.musicList = [];
                     this.getData();
                 })
             },
