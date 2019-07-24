@@ -101,6 +101,7 @@
                 this.$refs['adminForm'].validate(valid => {
                     if (valid) {
                         this.$http.post(this.$apis.addNewAdmin, this.form).then(res => {
+                            console.log(res);
                             if (res.success) {
                                 this.handleCancel();
                                 this.getData();
@@ -120,7 +121,6 @@
                 this.$store.commit('changeDialogVisible', this.dialogVisible);
             },
             handleDelete(index, item) {
-                console.log(item);
                 let action = () => this.$http.post(this.$apis.deleteAdmin, {_id: item._id});
                 this.messageBox(action, '删除用户').then(() => {
                     this.getData();
@@ -128,7 +128,6 @@
             },
             getData() {
                 this.$http.get(this.$apis.findAdmins).then(res => {
-                    console.log(res);
                     this.tableData = res.data;
                 })
             }
