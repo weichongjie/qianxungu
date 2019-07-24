@@ -263,7 +263,9 @@
             },
             // 点击上传
             submitUpload() {
+               
                 this.$refs['musicTypeForm'].validate(valid => {
+                     console.log(valid)
                     if (valid) {
                         this.$refs.musicUpload.submit();
                         this.$refs.imgUpload.submit();
