@@ -36,7 +36,7 @@
                 <template slot="header" slot-scope="scope">操作</template>
                 <template slot-scope="scope">
                     <el-button
-                            @click="deletePermission(scope.$index, scope.row)"
+                            @click="handleDelete(scope.$index, scope.row)"
                             type="danger"
                             size="mini">
                         删除
@@ -64,7 +64,7 @@
                 this.dialogVisible = true;
                 this.$store.commit('changeDialogVisible', this.dialogVisible);
             },
-            deletePermission(index, item) {
+            handleDelete(index, item) {
                 let action = () => this.$http.post(this.$apis.deletePermission, {_id: item._id});
                 this.messageBox(action, '删除权限').then(() => {
                     this.getData();

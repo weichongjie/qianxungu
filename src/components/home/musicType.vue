@@ -58,7 +58,7 @@
                 <template slot="header" slot-scope="scope">操作</template>
                 <template slot-scope="scope">
                     <el-button
-                            @click="deleteAdmin(scope.$index, scope.row)"
+                            @click="handleDelete(scope.$index, scope.row)"
                             type="danger"
                             size="mini">
                         删除
@@ -109,7 +109,7 @@
                 this.$refs['musicTypeForm'].resetFields();
                 this.$store.commit('changeDialogVisible', this.dialogVisible);
             },
-            deleteAdmin(index, item) {
+            handleDelete(index, item) {
                 console.log(item);
                 let action = () => this.$http.post(this.$apis.deleteMusicType, {_id: item._id});
                 this.messageBox(action, '删除音乐类型').then(() => {
