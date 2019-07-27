@@ -87,8 +87,8 @@
                 if (this.gengxin) {  //更新角色
                     this.$http.post(this.$apis.updateRole, this.form).then(res => {
                         console.log(res);
-                        this.$refs['form'].resetFields();
-                        this.dialogVisible = false;
+                        this.$refs['form'].resetFields();  //清空表单数据
+                        this.dialogVisible = false;   
                         this.getData();
                     })
                 } else {      //新增角色

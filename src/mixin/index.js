@@ -57,6 +57,7 @@ Vue.mixin({
                 }
             }
             return handledPermissions;
+           
         },
         // MD5加密
         sparkMd5File(file) {

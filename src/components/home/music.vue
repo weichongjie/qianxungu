@@ -247,8 +247,9 @@
             },
             // 获取音频文件
             musicChange(file) {
+                 console.log(file);
                 this.audioFile = file.raw;
-                // console.log(this.audioFile);
+                 console.log(this.audioFile);
             },
             // 获取图片文件
             imgChange(file) {
@@ -279,16 +280,11 @@
             },
             // 点击上传
             submitUpload() {
-<<<<<<< HEAD
-               
-                this.$refs['musicTypeForm'].validate(valid => {
-                     console.log(valid)
-=======
                 this.$refs['musicUploadForm'].validate(valid => {
->>>>>>> e9176ec8a205d30289c31b345a4afa0c6cdee7cb
                     if (valid) {
                         this.$refs.musicUpload.submit();
                         this.$refs.imgUpload.submit();
+                        console.log(this.$refs.imgUpload);
                         console.log(this.uploadPercentage);
                         this.cancelAdd();
                         this.getData();
@@ -298,6 +294,7 @@
                 //     this.cancelAdd();
                 //     this.getData();
                 // }
+                
             },
             // 取消上传
             CancelUpload() {
