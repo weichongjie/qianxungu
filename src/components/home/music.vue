@@ -260,7 +260,12 @@
             },
             // 获取音频文件
             musicChange(file) {
+                 console.log(file);
                 this.audioFile = file.raw;
+<<<<<<< HEAD
+=======
+                 console.log(this.audioFile);
+>>>>>>> dev
             },
             // 获取图片文件
             imgChange(file) {
@@ -270,6 +275,7 @@
             submitUpload() {
                 this.$refs['musicUploadForm'].validate(valid => {
                     if (valid) {
+<<<<<<< HEAD
                         if (!this.audioFile.name) {
                             this.$message({type: 'warning', message: '还没选择音频文件，请选择音频文件'});
                             return false;
@@ -296,6 +302,21 @@
                         });
                     }
                 })
+=======
+                        this.$refs.musicUpload.submit();
+                        this.$refs.imgUpload.submit();
+                        console.log(this.$refs.imgUpload);
+                        console.log(this.uploadPercentage);
+                        this.cancelAdd();
+                        this.getData();
+                    }
+                })
+                // if (this.uploadPercentage >= 100) {
+                //     this.cancelAdd();
+                //     this.getData();
+                // }
+                
+>>>>>>> dev
             },
             // 取消上传
             CancelUpload() {
