@@ -20,9 +20,9 @@
                             action="http://localhost:3000"
                             ref="musicUpload"
                             :auto-upload="false"
-                            :http-request="upload"
                             :on-change="musicChange"
                             :before-remove="beforeRemove"
+                            :limit="1"
                             accept=".cd,.mp3,.wma,.flac,.aac,.mmf,.amr,.m4a,.m4r,.ogg,.mp2,.wav,.wv,.CD,.MP3,.WMA,.FLAC,.AAC,.MMF,.AMR,.M4A,.M4R,.OGG,.MP2,.WAV,.WV">
                         <el-button slot="trigger" size="small" type="primary">选取音频文件</el-button>
                         <div slot="tip" class="el-upload-tip">只能选取1个音频文件</div>
@@ -35,9 +35,9 @@
                             action="http://localhost:3000"
                             ref="imgUpload"
                             :auto-upload="false"
-                            :http-request="upload"
                             :on-change="imgChange"
                             :before-remove="beforeRemove"
+                            :limit="1"
                             accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF">
                         <el-button slot="trigger" size="small" type="primary">选取图片文件</el-button>
                         <div slot="tip" class="el-upload-tip">只能选取1个图片文件</div>
@@ -88,33 +88,37 @@
                     width="55" fixed>
 
             </el-table-column>
-<!--            展开内容-->
-            <el-table-column type="expand">
+<!--            展开内容(详情)-->
+            <el-table-column type="expand" show-overflow-tooltip>
                 <template slot-scope="props">
-                    <el-form label-position="left" inline class="demo-table-expand">
-                        <el-form-item label="音频 ID">
+                    <el-form label-position="left" class="table-expand">
+                        <el-form-item label="音频 ID" label-width="100px">
                             <span>{{ props.row._id }}</span>
                         </el-form-item>
-                        <el-form-item label="音频名称">
+                        <el-form-item label="音频名称" label-width="100px">
                             <span>{{ props.row.name }}</span>
                         </el-form-item>
-                        <el-form-item label="音频类型">
+                        <el-form-item label="音频类型" label-width="100px">
                             <span>{{ props.row.type }}</span>
                         </el-form-item>
-                        <el-form-item label="音频地址">
+                        <el-form-item label="音频描述" label-width="100px">
+                            <span>{{ props.row.description }}</span>
+                        </el-form-item>
+                        <el-form-item label="音频地址" label-width="100px">
                             <span>{{ props.row.address }}</span>
                         </el-form-item>
-                        <el-form-item label="音频源文件">
+                        <el-form-item label="音频源文件" label-width="100px">
                             <span>{{ props.row.xm4aPath }}</span>
                         </el-form-item>
-                        <el-form-item label="音频背景">
-                            <span>{{ props.row.icon }}</span>
+                        <el-form-item label="音频背景" label-width="100px">
+<!--                            <img :src="'D:/WebFED/practise/exercise/sever/qinaxunguServer/public' + props.row.icon.replace(/\\/g, '/')" alt="">-->
+                            <span>{{ props.row.icon.replace(/\\/g, '/') }}</span>
                         </el-form-item>
-                        <el-form-item label="喜爱人数">
+                        <el-form-item label="喜爱人数" label-width="100px">
                             <span>{{ props.row.liked }}</span>
                         </el-form-item>
-                        <el-form-item label="音频发布日期">
-                            <span>{{ props.row.pubDate }}</span>
+                        <el-form-item label="音频发布日期" label-width="100px">
+                            <span>{{ props.row.pubDate | transTime }}</span>
                         </el-form-item>
                     </el-form>
                 </template>
@@ -130,13 +134,6 @@
             <el-table-column
                     prop="type"
                     label="音频类型"
-                    width="150"
-                    show-overflow-tooltip>
-
-            </el-table-column>
-            <el-table-column
-                    prop="pubDate"
-                    label="音频发布日期"
                     width="150"
                     show-overflow-tooltip>
 
@@ -189,9 +186,25 @@
                 <el-form-item label="音乐类型" required prop="type">
                     <el-input v-model="updateForm.type"></el-input>
                 </el-form-item>
+<!--                要文件选择添加文件-->
+<!--                <el-form-item label="音乐背景" required prop="icon">-->
+<!--                    <el-input v-model="updateForm.icon"></el-input>-->
+<!--                </el-form-item>-->
                 <el-form-item label="音乐背景" required prop="icon">
-                    <el-input v-model="updateForm.icon"></el-input>
+                    <el-upload
+                            class="upload-demo"
+                            action="http://localhost:3000"
+                            ref="imgUpload"
+                            :auto-upload="false"
+                            :on-change="imgChange"
+                            :before-remove="beforeRemove"
+                            :limit="1"
+                            accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF">
+                        <el-button slot="trigger" size="small" type="primary">选取图片文件</el-button>
+                        <div slot="tip" class="el-upload-tip">只能选取1个图片文件</div>
+                    </el-upload>
                 </el-form-item>
+
                 <el-form-item label="音乐 ID" required prop="_id">
                     <el-input v-model="updateForm._id" :disabled="true"></el-input>
                 </el-form-item>
@@ -233,7 +246,7 @@
                 ],
                 audioFile: {},
                 imgFile: {},
-                musicList: []
+                musicList: ''
             }
         },
         methods: {
@@ -248,50 +261,41 @@
             // 获取音频文件
             musicChange(file) {
                 this.audioFile = file.raw;
-                // console.log(this.audioFile);
             },
             // 获取图片文件
             imgChange(file) {
                 this.imgFile = file.raw;
-                // console.log(this.imgFile);
-            },
-            // 分块上传
-            upload() {
-                // 文件是否添加
-                if (!this.audioFile.name) {
-                    this.$message({type: 'error', message: '当前没有选择音频文件，请选择音频文件'});
-                    return false;
-                }
-                if (!this.imgFile.name) {
-                    this.$message({type: 'error', message: '当前没有选择图片文件，请选择图片文件'});
-                    return false;
-                }
-                // 分块大小
-                let chunkSize = 1 * 1024 * 1024;
-                // 文件大小
-                let fileSize = this.audioFile.size;
-                // 分块数量
-                let chunks = Math.ceil(fileSize / chunkSize);
-                // 音乐类型
-                let musicType = this.audioFile.type;
-                // 开始上传
-                this.startUpload(this.audioFile, this.imgFile, chunkSize, chunks, musicType, this.description);
             },
             // 点击上传
             submitUpload() {
                 this.$refs['musicUploadForm'].validate(valid => {
                     if (valid) {
-                        this.$refs.musicUpload.submit();
-                        this.$refs.imgUpload.submit();
-                        console.log(this.uploadPercentage);
-                        this.cancelAdd();
-                        this.getData();
+                        if (!this.audioFile.name) {
+                            this.$message({type: 'warning', message: '还没选择音频文件，请选择音频文件'});
+                            return false;
+                        }
+                        if (!this.imgFile.name) {
+                            this.$message({type: 'warning', message: '还没选择图片文件，请选择图片文件'});
+                            return false;
+                        }
+                        // 分块大小
+                        let chunkSize = 1 * 1024 * 1024;
+                        // 文件大小
+                        let fileSize = this.audioFile.size;
+                        // 分块数量
+                        let chunks = Math.ceil(fileSize / chunkSize);
+                        // 音乐类型
+                        let musicType = this.audioFile.type;
+                        // 开始上传
+                        this.startUpload(this.audioFile, this.imgFile, chunkSize, chunks, musicType, this.uploadForm.description).then(res => {
+                            if (res.success) {
+                                this.$message({type: 'success', message: '文件上传成功'});
+                                this.cancelAdd();
+                                this.getData();
+                            }
+                        });
                     }
                 })
-                // if (this.uploadPercentage >= 100) {
-                //     this.cancelAdd();
-                //     this.getData();
-                // }
             },
             // 取消上传
             CancelUpload() {
@@ -310,23 +314,25 @@
             // 点击更新
             handleUpdate(index, item) {
                 console.log(item);
-                this.form.name = item.name;
-                this.form._id = item._id;
-                this.form.description = item.description;
-                this.form.type = item.type;
-                this.form.icon = item.icon;
+                this.updateForm.name = item.name;
+                this.updateForm._id = item._id;
+                this.updateForm.description = item.description;
+                this.updateForm.type = item.type;
+                this.updateForm.icon = item.icon;
                 this.isUpdate = true;
             },
             // 提交更新
             submitUpdate() {
                 this.$refs['musicUpdateForm'].validate(valid => {
                     if (valid) {
-                        this.$http.post(this.$apis.updateMusicInfo, this.updateForm).then(res => {
-                            if (res.success) {
-                                this.cancelUpdate();
-                                this.getData();
-                            }
-                        });
+                        console.log(this.updateForm);
+                        console.log(this.imgFile);
+                        // this.$http.post(this.$apis.updateMusicInfo, this.updateForm).then(res => {
+                        //     if (res.success) {
+                        //         this.cancelUpdate();
+                        //         this.getData();
+                        //     }
+                        // });
                     }
                 })
             },
@@ -337,12 +343,12 @@
             },
             // 点击删除
             handleDelete(index, item) {
-                console.log(item);
                 let obj = {_id: item._id};
-                this.musicList.push(obj);
+                let arr = [];
+                arr.push(obj);
+                this.musicList = JSON.stringify(arr);
                 let action = () => this.$http.post(this.$apis.deleteMusic, {musicList: this.musicList});
                 this.messageBox(action, '删除音频').then(res => {
-                    console.log(res);
                     this.musicList = [];
                     this.getData();
                 })
@@ -362,19 +368,24 @@
 </script>
 
 <style scoped lang='scss'>
-    .demo-table-expand {
-        font-size: 0;
-    }
-    .demo-table-expand .el-form-item {
-        margin-right: 0;
-        margin-bottom: 0;
-        width: 100%;
-        .demo-table-expand label {
-            width: 90px;
+    .music {
+        .table-expand label {
+            width: 100px;
             color: #99a9bf;
         }
-    }
-    .el-progress {
-        margin-top: 10px;
+        /*.table-expand {*/
+        /*    font-size: 0;*/
+        /*}*/
+        .table-expand .el-form-item {
+            margin-right: 0;
+            margin-bottom: 0;
+            width: 100%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+        .el-progress {
+            margin-top: 10px;
+        }
     }
 </style>
