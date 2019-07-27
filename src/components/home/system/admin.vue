@@ -21,8 +21,19 @@
                     <el-input v-model="form.nickname"></el-input>
                 </el-form-item>
 
+<!--                要下拉框选择角色-->
                 <el-form-item label="管理员角色" required prop="roles">
-                    <el-input v-model="form.roles"></el-input>
+                    <el-select
+                            v-model="form.roles"
+                            placeholder="请选择角色">
+                        <el-option
+                                :label="item.roleDesc"
+                                :value="item.permissions"
+                                v-for="item in rolesData"
+                                :key="item._id">
+
+                        </el-option>
+                    </el-select>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -89,7 +100,8 @@
                     password: '',
                     roles: '',
                     nickname: ''
-                }
+                },
+                rolesData: []
             }
         },
         methods: {
@@ -100,6 +112,7 @@
             handleSubmit() {
                 this.$refs['adminForm'].validate(valid => {
                     if (valid) {
+                        this.form.roles = JSON.stringify(this.form.roles);
                         this.$http.post(this.$apis.addNewAdmin, this.form).then(res => {
                             console.log(res);
                             if (res.success) {
@@ -129,11 +142,15 @@
             getData() {
                 this.$http.get(this.$apis.findAdmins).then(res => {
                     this.tableData = res.data;
-                })
+                });
             }
         },
         mounted() {
             this.getData();
+            this.$http.get(this.$apis.findRoles).then(res => {
+                console.log(res);
+                this.rolesData = res.data;
+            })
         }
     }
 </script>

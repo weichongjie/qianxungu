@@ -95,7 +95,6 @@ Vue.mixin({
             return new Promise((resolve, reject) => {
                 let url = `${process.env.VUE_APP_BASE_URL}/music/checkFile?fileName=${fileName}&fileMd5Value=${fileMd5Value}&musicType=${musicType}`;
                 this.$http.get(url).then(res => {
-                    console.log('检测文件是否存在', res);
                     resolve(res);
                 })
             })
@@ -115,12 +114,13 @@ Vue.mixin({
                 form.append('description', description);
                 // 添加音频背景图
                 if ((index + 1) === chunks) {
-                    let iconInput = audioFile;
+                    let iconInput = imgFile;
                     form.append('iconInput', iconInput);
                 }
                 this.$http.post(this.$apis.uploadMusic, form).then(res => {
-                    console.log('获取到的数据结果', res);
-                    resolve(res);
+                    if (res.success) {
+                        resolve(res);
+                    }
                 })
             })
         },
@@ -143,37 +143,60 @@ Vue.mixin({
                 }
             })
         },
-        // 合并分块
-        mergeChunk(fileMd5Value, fileName, file, musicType) {
-            let url = `${process.env.VUE_APP_BASE_URL}/music/mergeChunk?md5=${fileMd5Value}&fileName=${fileName}&size=${file.size}&musicType=${musicType}`;
-            this.$http.get(url).then(res => {
-                console.log('合并分块返回数据', res);
-                this.$message({type: 'success', message: '上传成功'});
-            })
-        },
         // 开始上传
         startUpload(audioFile, imgFile, chunkSize, chunks, musicType, description) {
-            // 文件使用md5加密
-            this.sparkMd5File(audioFile).then(res => {
-                console.log('fileMd5Value',res);
-                let fileMd5Value = res;
-                // 检验文件是否存在
-                this.checkFileExist(audioFile.name, fileMd5Value).then(res => {
-                    console.log('检验文件是否存在返回数据', res);
-                    // 服务器该文件已经存在
-                    if (res.file) {
-                        console.log('文件存在', res.file);
-                        this.$message({type: 'success', message: '文件已秒传成功'});
-                        return false;
-                    } else {
-                        console.log('文件不存在', res);
-                        // 服务器该文件不存在
-                        this.checkAndUploadChunk(imgFile, audioFile, chunkSize, chunks, fileMd5Value, res.chunkList, audioFile.name, musicType, description).then(res => {
-                            console.log(res);
-                        })
-                    }
-                })
+            return new Promise((resolve, reject) => {
+                // 文件使用md5加密
+                this.sparkMd5File(audioFile).then(res => {
+                    // console.log('fileMd5Value',res);
+                    let fileMd5Value = res;
+                    // 检验文件是否存在
+                    this.checkFileExist(audioFile.name, fileMd5Value, musicType).then(res => {
+                        console.log('检验文件是否存在返回数据', res);
+                        // 服务器该文件已经存在
+                        if (res.chunkList.length) {
+                            // console.log('文件存在', res.file);
+                            this.$message({type: 'success', message: '文件已秒传成功'});
+                            return false;
+                        } else {
+                            // 服务器该文件不存在
+                            this.checkAndUploadChunk(imgFile, audioFile, chunkSize, chunks, fileMd5Value, res.chunkList, audioFile.name, musicType, description).then(res => {
+                                resolve(res);
+                            });
+                        }
+                    })
+                });
             });
+        },
+        // 合并分块
+        // mergeChunk(fileMd5Value, fileName, file, musicType) {
+        //     let url = `${process.env.VUE_APP_BASE_URL}/music/mergeChunk?md5=${fileMd5Value}&fileName=${fileName}&size=${file.size}&musicType=${musicType}`;
+        //     this.$http.get(url).then(res => {
+        //         console.log('合并分块返回数据', res);
+        //         this.$message({type: 'success', message: '上传成功'});
+        //     })
+        // },
+    },
+    filters: {
+        transTime(val) {
+            let newVal = parseInt(val);
+            let now = new Date(newVal);
+            let year = now.getUTCFullYear();
+            let month = addZero(now.getMonth() + 1);
+            let day = addZero(now.getDate());
+            let hour = addZero(now.getHours());
+            let minute = addZero(now.getMinutes());
+            let second = addZero(now.getSeconds());
+    
+            function addZero(num) {
+                if (num < 10) {
+                    return '0' + num;
+                } else {
+                    return num;
+                }
+            }
+        
+            return `${year}年${month}月${day}日${hour}时${minute}分${second}秒`;
         }
     }
 });
