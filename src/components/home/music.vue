@@ -268,13 +268,7 @@
             },
             // 点击上传
             submitUpload() {
-<<<<<<< HEAD
-               
-                this.$refs['musicTypeForm'].validate(valid => {
-                     console.log(valid)
-=======
                 this.$refs['musicUploadForm'].validate(valid => {
->>>>>>> e9176ec8a205d30289c31b345a4afa0c6cdee7cb
                     if (valid) {
                         if (!this.audioFile.name) {
                             this.$message({type: 'warning', message: '还没选择音频文件，请选择音频文件'});
